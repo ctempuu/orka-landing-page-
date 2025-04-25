@@ -6,9 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // ** IMPORTANT: Replace these with YOUR actual file paths relative to index.html **
         { type: 'video', src: 'media/animation 1.mp4' },
         { type: 'image', src: 'media/advert 1.png' },
-        { type: 'image', src: 'cafe shot 2.png' },
+        { type: 'image', src: 'media/advert 2.png' },
+        { type: 'image', src: 'media/cafe shot 2.png' },
+        { type: 'image', src: 'media/cafe shot 3.png' },
+        { type: 'image', src: 'media/cafe shot 5.png' },
+        { type: 'image', src: 'media/cup shot 3.png' },
+        { type: 'image', src: 'media/search.png' },
     ];
-    const cycleInterval = 8000; // 8 seconds per item
+    const cycleInterval = 9000; // 9 seconds per item
     let currentMediaIndex = 0;
     const bgContainer1 = document.getElementById('bg-container-1');
     const bgContainer2 = document.getElementById('bg-container-2');
