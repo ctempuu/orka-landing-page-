@@ -11,7 +11,7 @@
 html, body {
     height: 100%;
     width: 100%;
-    overflow: hidden; /* Prevent scrollbars caused by background */
+    overflow: hidden;
 }
 
 body {
@@ -19,40 +19,49 @@ body {
     color: #ffffff;
     font-family: 'Sora', sans-serif;
     line-height: 1.6;
-    position: relative; /* Needed for absolute positioning of children */
-    cursor: none;
+    position: relative; /* Establishes a base stacking context */
+    /* cursor: none; will be applied by JS via .trail-active */
 }
 
-/* Background Container Styling (Add/Modify these) */
+/* --- Layering Order (Z-Index) ---
+ * Trail Dots: 9999 (Top)
+ * Header: 20
+ * Main Content: 10
+ * Background Overlay: 2
+ * Background Container/Media: 1 (Bottom)
+ * --------------------------------- */
+
+/* Background Container Styling */
 .background-container {
-    position: fixed; /* Cover the viewport */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Position behind all other content */
-    opacity: 0; /* Start hidden */
-    transition: opacity 1.5s ease-in-out; /* Smooth fade transition */
-    overflow: hidden; /* Hide parts of media outside container */
-    background-color: #000; /* Ensure black during transitions */
+    z-index: 1; /* Bottom layer (but above default) */
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    overflow: hidden;
+    background-color: #000;
 }
 
 .background-container.visible {
-    opacity: 1; /* Class to make container visible */
+    opacity: 1;
 }
 
-/* Style for media elements within the containers */
+/* Background Media Elements */
 .background-container img,
 .background-container video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cover the container, cropping if needed */
-    position: absolute;
+    object-fit: cover;
+    position: absolute; /* Positioned within the container */
     top: 0;
     left: 0;
+    /* z-index is relative to the container, which is z-index: 1 */
 }
 
-/* Optional: Add a subtle dark overlay if text is hard to read */
+/* Background Overlay */
 .background-container::before {
     content: '';
     position: absolute;
@@ -60,22 +69,23 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* Adjust opacity (0.0 to 1.0) */
-    z-index: 1; /* Overlay above media but below content */
+    /* === ADJUST THIS VALUE === */
+    /* Try increasing the last number (alpha opacity) */
+    /* Start with 0.5 or 0.6, increase if needed */
+    background-color: rgba(0, 0, 0, 0.6); /* Was 0.3, now darker */
+    /* === END ADJUSTMENT === */
+    z-index: 2; /* Above media, below content */
 }
 
-
-/* Header & Navigation (Ensure z-index is positive) */
+/* Header & Navigation */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    position: absolute;
+    position: relative; /* Changed from absolute for simpler stacking */
     width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 10; /* Ensure header is above background */
+    z-index: 20; /* Above main content and background */
 }
 
 .logo {
@@ -99,26 +109,26 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #0077cc;
+    color: #0077cc; /* Accent Blue */
 }
 
-/* Main Hero Section (Ensure z-index is positive) */
+/* Main Hero Section */
 main {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 80vh; /* Adjust height as needed, allowing space for header */
     text-align: center;
     padding: 0 20px;
-    position: relative; /* Needed for z-index */
-    z-index: 5; /* Ensure main content is above background */
+    position: relative; /* Ensure z-index takes effect */
+    z-index: 10; /* Above background, below header */
 }
 
 .hero h1 {
     font-weight: 800;
     font-size: 3.5em;
     margin-bottom: 15px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Optional: Improve readability */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Slightly stronger shadow */
 }
 
 .hero p {
@@ -126,46 +136,81 @@ main {
     max-width: 600px;
     margin-bottom: 30px;
     opacity: 0.9;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Optional: Improve readability */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* Call to Action Button */
+/* Call to Action Button - Revised for Engagement */
 .cta-button {
-    display: inline-block;
-    background-color: #ffffff;
-    color: #000000;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 4px;
+    display: inline-block; /* Keep as inline-block */
+    background-color: #ffffff; /* White background */
+    color: #000000;           /* Black text */
+
+    /* --- Enlargement --- */
+    padding: 16px 45px; /* Increased padding (was 12px 30px) */
+    font-size: 1.15em;  /* Increased font size (was 1em) */
+    /* --- End Enlargement --- */
+
+    border: 2px solid #ffffff; /* Add a border that matches background initially */
+    border-radius: 5px;   /* Slightly more rounded corners? Adjust as you like */
     font-family: 'Sora', sans-serif;
-    font-weight: 800;
-    font-size: 1em;
+    font-weight: 800;     /* Keep text bold */
     text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;        /* Ensure pointer cursor */
+    text-align: center;
+
+    /* --- Smooth Transitions --- */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    /* --- End Transitions --- */
+
+    /* Add a subtle shadow for depth */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Engaging Hover State --- */
 .cta-button:hover {
-    background-color: #0077cc;
-    color: #ffffff;
-}
+    background-color: #0077cc; /* Accent Blue background */
+    color: #ffffff;           /* White text */
+    border-color: #0077cc;    /* Match border to background */
 
-/* Cursor Trail Dot Styling (Ensure z-index is highest) */
+    /* Make it slightly bigger and lift */
+    transform: scale(1.05) translateY(-2px);
+
+    /* Add a blue glow effect */
+    box-shadow: 0 5px 15px rgba(0, 119, 204, 0.5); /* Accent blue shadow */
+}
+/* --- End Hover State --- */
+
+
+/* --- Engaging Active State (When Clicked) --- */
+.cta-button:active {
+    transform: scale(0.98) translateY(0); /* Press down effect */
+    background-color: #005fa3; /* Slightly darker blue */
+    border-color: #005fa3;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Reduce shadow slightly */
+}
+/* --- End Active State --- */
+
+
+/* == Cursor Trail Styling == */
 .trail-dot {
-    position: fixed;
+    position: fixed; /* Position relative to viewport */
     width: 15px;
     height: 15px;
-    background-color: #0077cc;
+    background-color: #0077cc; /* Accent Blue */
     border-radius: 50%;
-    pointer-events: none;
-    left: 0;
-    top: 0;
-    z-index: 9999; /* Highest */
-    opacity: 0;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.5s ease-out;
+    pointer-events: none; /* Allows clicks to go through */
+    left: 0; /* Positioned by JS */
+    top: 0; /* Positioned by JS */
+    z-index: 9999; /* HIGHEST layer - critical */
+    opacity: 0; /* Start hidden, shown by JS */
+    transform: translate(-50%, -50%); /* Center dot on cursor */
+    transition: opacity 0.3s ease-out, transform 0.05s linear; /* Add smooth transform */
+     /* Optional: Add a subtle blur for watery feel */
+    /* filter: blur(1px); */
 }
 
+/* Hide default cursor when trail is active */
 body.trail-active {
     cursor: none;
 }
